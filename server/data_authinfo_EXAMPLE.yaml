@@ -1,0 +1,4 @@
+#EXAMPLE FILE.  Contains a dictionary username:password for all accounts that are valid for the server.  This isn't fully supported yet (and may not be).
+#Note this is NOT supposed to be secure- it is like providing a single ftp account for a read-only FTP (the service does not expose any write functionality,
+#thought it COULD be used to json deserialize malacious data, potentially.
+{USER1: PASSWORD1, }

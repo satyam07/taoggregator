@@ -1,0 +1,3 @@
+@echo off
+echo Killing any running python...
+taskkill /im python.exe /f

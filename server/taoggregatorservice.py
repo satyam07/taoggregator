@@ -17,9 +17,9 @@ import threading
 import yaml
 import zmq
 
-import database
-import taoggregator.constants as constants
-import contentmanagement
+import taoggregator.server.database as database
+import taoggregator
+import taoggregator.server.contentmanagement as contentmanagement
 import taoggregator.taoutils as taoutils
 
 #SERVICE
@@ -27,7 +27,7 @@ import taoggregator.taoutils as taoutils
 
 class ServiceState(object):
     """Represents the state of a TaoggregatorService that can be serialized to persist across sessions."""
-    def __init__(self, filename, sec_between_sync=600, last_sync_time=datetime.datetime(datetime.MINYEAR, 1, 1)):
+    def __init__(self, filename, sec_between_sync=111600, last_sync_time=datetime.datetime(datetime.MINYEAR, 1, 1)):
         """Create a new instance.
 
         filename: The filename of the yaml file used for 'save' and 'load' methods.  Passing a filename does NOT try to
@@ -204,12 +204,6 @@ class AuthInfo(dict):
         self.__setstate__(storedstate)
         return self
 
-class UnserializableMessageError(Exception):
-    """Indicates that the message sent to the service could not be parsed/serialized."""
-    def __init__(self, message):
-        Exception.__init__(self, message)
-        return
-
 class InvalidMessageError(Exception):
     """Indicates that the message sent to the server could be serialized but holds invalid data that could not be used.
     """
@@ -240,8 +234,8 @@ class SocketServiceRunner(object):
             serviceimpl = TaoggregatorServiceImpl(service_state=state, service_database=db, contentsources=srcs,
                                                   contenttargets=tgts, authinfos=authinfo)
         self.serviceimpl = serviceimpl
-        hostAndPort = hostAndPort or constants.getDefaultHostAndPort(False)
-        self.addr = constants.createConnStr(*hostAndPort)
+        hostAndPort = hostAndPort or taoggregator.getDefaultHostAndPort(False)
+        self.addr = taoggregator.createConnStr(*hostAndPort)
         return
     def run(self):
         self.logger.info('Binding to ' + self.addr)
@@ -270,7 +264,7 @@ class SocketServiceRunner(object):
         if not isinstance(decodedmessage, list) or len(decodedmessage) != 3:
             return InvalidMessageError('Message must be list of [funcname, *args, **kwargs]')
         funcname = decodedmessage[0]
-        if funcname not in constants.EXPORTED_METHODS:
+        if funcname not in taoggregator.EXPORTED_METHODS:
             return InvalidMessageError('Func name "%s" is not part of exported methods.' % funcname)
         return
     def serializetojson(self, obj):
@@ -285,12 +279,6 @@ def encodeobjtojson(obj):
         return obj.isoformat()
     else:
         return obj#raise TypeError, 'Object of type %s with value of %s is not JSON serializable' % (type(Obj), repr(Obj))
-    
-class ServiceOfflineError(Exception):
-    """Error raised when the JSONRPC server tries to handle something but the socket-based server is offline."""
-    def __init__(self):
-        super(ServiceOfflineError, self).__init__()
-        return
     
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG,

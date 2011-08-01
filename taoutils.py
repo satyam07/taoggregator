@@ -375,6 +375,7 @@ def parse_datetime(s, key=None, additional_formats=()):
 
 MPMODE_THREADING = 0
 MPMODE_MULTIPROCESSING = 1
+
 def pfor(seq, action, block=True, mpmode=MPMODE_THREADING):
     """Iterate over sequence, performing action(item) for each item.  Note that if side effects happen in 'action', you
     must make sure the actions are thread/process safe, depending on mpmode.  If you want to aggregate the result of

@@ -3,7 +3,7 @@ import simplejson
 import zmq
 
 class SocketClient(object):
-    def __init__(self, serveraddr, return_only_strings=False):
+    def __init__(self, serveraddr, return_only_strings=True):
         self.logger = logging.getLogger('SocketClient')
         self.logger.info('Establishing connection to "%s".' % serveraddr)
         context = zmq.Context()
@@ -18,7 +18,7 @@ class SocketClient(object):
         received = self.socket.recv()
         self.logger.info('Received from service: "%s"' % received)
         result = received if self.return_only_strings else simplejson.loads(received)
-        self.logger.info('Returning: %s' % repr(result))
+        self.logger.info('Returning%s: %s' % ('(as str)' if self.return_only_strings else '', repr(result)))
         return result
     def request_content_by_date(self, *args, **kwargs):
         items = self._sendmessage('request_content_by_date', *args, **kwargs)

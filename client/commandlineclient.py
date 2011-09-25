@@ -1,6 +1,4 @@
-import datetime
-
-import taoggregator.constants as constants
+import taoggregator
 import taoggregator.clientimpls as clientimpls
 import taoggregator.taoutils as taoutils
 
@@ -15,7 +13,7 @@ def format_contentitem(contentitem):
 class CommandlineClient(object):
     def __init__(self):
         print 'Starting client...'
-        self.proxy = clientimpls.SocketClient(constants.createConnStr(constants.getDefaultHostAndPort()))
+        self.proxy = clientimpls.SocketClient(taoggregator.createConnStr(taoggregator.getDefaultHostAndPort()))
         print 'Client started.'
         return
     def run(self):

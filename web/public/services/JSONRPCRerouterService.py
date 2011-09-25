@@ -9,6 +9,6 @@ if __name__ == '__main__':
         datefmt='%m-%d %H:%M',
         filename='JSONRPCRerouterService.log',
         filemode='a')
-    logging.info('Handling CGI request.')
     from jsonrpc.cgihandler import handleCGIRequest
     handleCGIRequest(SocketClient(taoggregator.createConnStr(*taoggregator.getDefaultHostAndPort())))
+	

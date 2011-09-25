@@ -27,7 +27,7 @@ import taoggregator.taoutils as taoutils
 
 class ServiceState(object):
     """Represents the state of a TaoggregatorService that can be serialized to persist across sessions."""
-    def __init__(self, filename, sec_between_sync=111600, last_sync_time=datetime.datetime(datetime.MINYEAR, 1, 1)):
+    def __init__(self, filename, sec_between_sync=600, last_sync_time=datetime.datetime(datetime.MINYEAR, 1, 1)):
         """Create a new instance.
 
         filename: The filename of the yaml file used for 'save' and 'load' methods.  Passing a filename does NOT try to

@@ -1,5 +1,4 @@
 @echo off
 
 echo Starting service...
-cd ..\server
-start python taoggregatorservice.py
+python ..\server\taoggregatorservice_run.py

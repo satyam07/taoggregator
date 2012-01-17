@@ -1,4 +1,4 @@
 @echo off
 
 echo Building UI...
-pyjsbuild feedpublisherwebui
+C:\PythonDev\pyjamas-0.8\bin\pyjsbuild feedpublisherwebui

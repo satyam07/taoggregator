@@ -2,4 +2,4 @@
 
 echo Starting CGI server...
 cd ..\web\output
-start python PythonCGIServer.py
+python PythonCGIServer.py

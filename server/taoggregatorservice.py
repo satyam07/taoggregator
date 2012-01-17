@@ -17,9 +17,9 @@ import threading
 import yaml
 import zmq
 
-import taoggregator.server.database as database
 import taoggregator
 import taoggregator.server.contentmanagement as contentmanagement
+import taoggregator.server.database as database
 import taoggregator.taoutils as taoutils
 
 #SERVICE
@@ -211,14 +211,20 @@ class InvalidMessageError(Exception):
         Exception.__init__(self, message)
         return
 
+MODULE_DIR = os.path.abspath(os.path.dirname(__file__))
+
+def _abs(filename):
+    return os.path.join(MODULE_DIR, filename)
+
+
 class SocketServiceRunner(object):
     """Class to that will route messages to/from the service implementation over sockets via ZeroMQ."""
     def __init__(self, hostAndPort=None,
                  serviceimpl=None,
-                 statefilename='servicestate.yaml',
-                 pluginfilename='data_serviceplugins.py',
-                 authinfofilename='data_authinfo.yaml',
-                 databasefilename='servicestate.db'):
+                 statefilename=_abs('servicestate.yaml'),
+                 pluginfilename=_abs('data_serviceplugins.py'),
+                 authinfofilename=_abs('data_authinfo.yaml'),
+                 databasefilename=_abs('servicestate.db')):
         """Creates a TaoggregatorService object.  If serviceimpl is supplied, use that ServiceImpl.  If None, use the
         statefilename, pluginfilename, and authinfofilename to create a new ServiceImpl.
         """
@@ -279,8 +285,9 @@ def encodeobjtojson(obj):
         return obj.isoformat()
     else:
         return obj#raise TypeError, 'Object of type %s with value of %s is not JSON serializable' % (type(Obj), repr(Obj))
-    
-if __name__ == '__main__':
+
+
+def main():
     logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
                     datefmt='%m-%d %H:%M',
@@ -298,3 +305,7 @@ if __name__ == '__main__':
 
     runner = SocketServiceRunner()
     runner.run()
+
+if __name__ == '__main__':
+    main()
+    

@@ -1,7 +1,6 @@
 import logging
-
-from taoggregator.clientimpls import SocketClient
-import taoggregator
+import os
+import sys
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG,
@@ -9,6 +8,14 @@ if __name__ == '__main__':
         datefmt='%m-%d %H:%M',
         filename='JSONRPCRerouterService.log',
         filemode='a')
-    logging.info('Handling CGI request.')
+
+    #Path one above the taoggregator root
+    tao_path_up_one = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..'))
+    sys.path.append(tao_path_up_one)
+
+    import taoggregator
+    from taoggregator.clientimpls import SocketClient
+
     from jsonrpc.cgihandler import handleCGIRequest
     handleCGIRequest(SocketClient(taoggregator.createConnStr(*taoggregator.getDefaultHostAndPort())))
+	
